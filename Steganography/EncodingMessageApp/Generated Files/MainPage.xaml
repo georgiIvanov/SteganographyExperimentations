@@ -1,0 +1,27 @@
+﻿<Page
+    x:Class="EncodingMessageApp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:EncodingMessageApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal">
+            <!--<Image x:Name="_originalImage" Source="Assets/empire.jpg" Stretch="None"/>-->
+            <Image x:Name="_modifiedImage" Stretch="None"/>
+            <StackPanel VerticalAlignment="Center" Orientation="Vertical" Margin="5" >
+                <Button x:ConnectionId='0'                      HorizontalAlignment="Center">Open Image</Button>
+                <Button x:ConnectionId='0' HorizontalAlignment="Center"                       >Add message</Button>
+                <Button x:ConnectionId='0' HorizontalAlignment="Center"                       >Get message</Button>
+            </StackPanel>
+            <StackPanel VerticalAlignment="Center" Orientation="Vertical" Margin="5" >
+                <TextBox Height="300" Width="500" x:Name="_text" TextWrapping="Wrap"/>
+                <TextBox Height="300" Width="500" x:Name="_foundText" TextWrapping="Wrap"/>
+            </StackPanel>
+
+        </StackPanel>
+    </Grid>
+</Page>
+
