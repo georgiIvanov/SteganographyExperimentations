@@ -5,6 +5,10 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EncodingMessageApp", "EncodingMessageApp\EncodingMessageApp.vcxproj", "{C5B48161-0F9B-4DBC-96DA-2F9199F27839}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SteganographicEncoding", "SteganographicEncoding\SteganographicEncoding.vcxproj", "{5B19C775-FFAB-4C49-9D6F-7C5D0F774B9C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Steganography", "Steganography\Steganography.vcxproj", "{7B98D2A2-D98F-4016-BC7F-58B7DEF5D517}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -33,6 +37,30 @@ Global
 		{C5B48161-0F9B-4DBC-96DA-2F9199F27839}.Release|x64.ActiveCfg = Release|x64
 		{C5B48161-0F9B-4DBC-96DA-2F9199F27839}.Release|x64.Build.0 = Release|x64
 		{C5B48161-0F9B-4DBC-96DA-2F9199F27839}.Release|x64.Deploy.0 = Release|x64
+		{5B19C775-FFAB-4C49-9D6F-7C5D0F774B9C}.Debug|ARM.ActiveCfg = Debug|ARM
+		{5B19C775-FFAB-4C49-9D6F-7C5D0F774B9C}.Debug|ARM.Build.0 = Debug|ARM
+		{5B19C775-FFAB-4C49-9D6F-7C5D0F774B9C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5B19C775-FFAB-4C49-9D6F-7C5D0F774B9C}.Debug|Win32.Build.0 = Debug|Win32
+		{5B19C775-FFAB-4C49-9D6F-7C5D0F774B9C}.Debug|x64.ActiveCfg = Debug|x64
+		{5B19C775-FFAB-4C49-9D6F-7C5D0F774B9C}.Debug|x64.Build.0 = Debug|x64
+		{5B19C775-FFAB-4C49-9D6F-7C5D0F774B9C}.Release|ARM.ActiveCfg = Release|ARM
+		{5B19C775-FFAB-4C49-9D6F-7C5D0F774B9C}.Release|ARM.Build.0 = Release|ARM
+		{5B19C775-FFAB-4C49-9D6F-7C5D0F774B9C}.Release|Win32.ActiveCfg = Release|Win32
+		{5B19C775-FFAB-4C49-9D6F-7C5D0F774B9C}.Release|Win32.Build.0 = Release|Win32
+		{5B19C775-FFAB-4C49-9D6F-7C5D0F774B9C}.Release|x64.ActiveCfg = Release|x64
+		{5B19C775-FFAB-4C49-9D6F-7C5D0F774B9C}.Release|x64.Build.0 = Release|x64
+		{7B98D2A2-D98F-4016-BC7F-58B7DEF5D517}.Debug|ARM.ActiveCfg = Debug|ARM
+		{7B98D2A2-D98F-4016-BC7F-58B7DEF5D517}.Debug|ARM.Build.0 = Debug|ARM
+		{7B98D2A2-D98F-4016-BC7F-58B7DEF5D517}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7B98D2A2-D98F-4016-BC7F-58B7DEF5D517}.Debug|Win32.Build.0 = Debug|Win32
+		{7B98D2A2-D98F-4016-BC7F-58B7DEF5D517}.Debug|x64.ActiveCfg = Debug|x64
+		{7B98D2A2-D98F-4016-BC7F-58B7DEF5D517}.Debug|x64.Build.0 = Debug|x64
+		{7B98D2A2-D98F-4016-BC7F-58B7DEF5D517}.Release|ARM.ActiveCfg = Release|ARM
+		{7B98D2A2-D98F-4016-BC7F-58B7DEF5D517}.Release|ARM.Build.0 = Release|ARM
+		{7B98D2A2-D98F-4016-BC7F-58B7DEF5D517}.Release|Win32.ActiveCfg = Release|Win32
+		{7B98D2A2-D98F-4016-BC7F-58B7DEF5D517}.Release|Win32.Build.0 = Release|Win32
+		{7B98D2A2-D98F-4016-BC7F-58B7DEF5D517}.Release|x64.ActiveCfg = Release|x64
+		{7B98D2A2-D98F-4016-BC7F-58B7DEF5D517}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

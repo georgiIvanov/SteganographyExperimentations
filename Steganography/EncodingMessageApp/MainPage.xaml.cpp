@@ -12,6 +12,8 @@
 #include <string>
 #include "EncodeInLowestBit.h"
 
+
+using namespace SteganographicEncoding;
 using namespace EncodingMessageApp;
 
 using namespace Platform;
@@ -44,6 +46,25 @@ MainPage::MainPage()
 	bitmap = ref new WriteableBitmap(1, 1);
 	bitEncoder = shared_ptr<EncodeInLowestBit>();
 	//setlocale(LC_ALL, "");
+	TestClass^ test = ref new TestClass();
+	auto lol = ref new Platform::Collections::Vector<uint8, uint8>();
+
+	auto ff = test->DecodeText(lol, 32);
+
+	
+	unique_ptr<wstring> str;
+	
+	String^ displayText = ref new String();
+	for (int i = 0; i < lol->Size; i ++)
+	{
+		
+		/*wchar_t ch = (wchar_t) lol->GetAt(i).ToString;
+		str->append(&ch);*/
+		displayText = displayText->Concat(displayText, lol->GetAt(i).ToString());
+	}
+
+	
+	_text->Text = displayText;
 }
 
 
@@ -203,7 +224,7 @@ void EncodingMessageApp::MainPage::Button_Click_1(Platform::Object^ sender, Wind
 
 	byte* image = this->GetImageBuffer();
 	unsigned int pixelCount = bitmap->PixelWidth * bitmap->PixelHeight;
-	auto byteCount = pixelCount / 8; // bitsPerPixel * pixelCount / 8
+	auto byteCount = pixelCount * 4; // bitsPerPixel * pixelCount / 8
 
 	byte* textLength = bitEncoder->BitConversion(length);
 

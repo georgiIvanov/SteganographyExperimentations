@@ -12,9 +12,9 @@
             <!--<Image x:Name="_originalImage" Source="Assets/empire.jpg" Stretch="None"/>-->
             <Image x:Name="_modifiedImage" Stretch="None"/>
             <StackPanel VerticalAlignment="Center" Orientation="Vertical" Margin="5" >
-                <Button x:ConnectionId='0'                      HorizontalAlignment="Center">Open Image</Button>
-                <Button x:ConnectionId='0' HorizontalAlignment="Center"                       >Add message</Button>
-                <Button x:ConnectionId='0' HorizontalAlignment="Center"                       >Get message</Button>
+                <Button x:ConnectionId='1'                      HorizontalAlignment="Center">Open Image</Button>
+                <Button x:ConnectionId='2' HorizontalAlignment="Center"                       >Add message</Button>
+                <Button x:ConnectionId='3' HorizontalAlignment="Center"                       >Get message</Button>
             </StackPanel>
             <StackPanel VerticalAlignment="Center" Orientation="Vertical" Margin="5" >
                 <TextBox Height="300" Width="500" x:Name="_text" TextWrapping="Wrap"/>
