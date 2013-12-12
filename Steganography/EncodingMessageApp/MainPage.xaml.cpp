@@ -15,6 +15,7 @@
 
 using namespace SteganographicEncoding;
 using namespace EncodingMessageApp;
+using namespace Platform::Collections;
 
 using namespace Platform;
 using namespace Windows::Foundation;
@@ -81,29 +82,29 @@ void MainPage::ChangeColors()
 {
 
 
-	byte* temp = this->GetImageBuffer();
-	const unsigned int width = bitmap->PixelWidth;
-	const unsigned int height = bitmap->PixelHeight;
-	for (unsigned int k = 0; k < height; k++)
-	{
-		for (unsigned int i = 0; i < (width * 4); i += 4)
-		{
-			int pos = k * (width * 4) + (i);
+	//byte* temp = this->GetImageBuffer();
+	//const unsigned int width = bitmap->PixelWidth;
+	//const unsigned int height = bitmap->PixelHeight;
+	//for (unsigned int k = 0; k < height; k++)
+	//{
+	//	for (unsigned int i = 0; i < (width * 4); i += 4)
+	//	{
+	//		int pos = k * (width * 4) + (i);
 
-			temp[pos] = temp[pos + 3];
-			temp[pos + 1] = ~temp[pos + 2];
-			temp[pos + 2] = ~temp[pos + 1];
-			temp[pos + 3] = ~temp[pos];
-			/*temp[pos] = rand() & 0xff;
-			temp[pos + 1] = rand() & 0xff;
-			temp[pos + 2] = rand() & 0xff;
-			temp[pos + 3] = rand() & 0xff;*/
-			/*temp[pos] = ~temp[pos];
-			temp[pos + 1] = ~temp[pos + 1] / 3;
-			temp[pos + 2] = ~temp[pos + 2] / 2;
-			temp[pos + 3] = ~temp[pos + 3];*/
-		}
-	}
+	//		temp[pos] = temp[pos + 3];
+	//		temp[pos + 1] = ~temp[pos + 2];
+	//		temp[pos + 2] = ~temp[pos + 1];
+	//		temp[pos + 3] = ~temp[pos];
+	//		/*temp[pos] = rand() & 0xff;
+	//		temp[pos + 1] = rand() & 0xff;
+	//		temp[pos + 2] = rand() & 0xff;
+	//		temp[pos + 3] = rand() & 0xff;*/
+	//		/*temp[pos] = ~temp[pos];
+	//		temp[pos + 1] = ~temp[pos + 1] / 3;
+	//		temp[pos + 2] = ~temp[pos + 2] / 2;
+	//		temp[pos + 3] = ~temp[pos + 3];*/
+	//	}
+	//}
 
 
 }
@@ -183,7 +184,7 @@ void MainPage::ChangeColors()
 //	return cString;
 //}
 
-byte* MainPage::GetImageBuffer()
+shared_ptr<vector<byte*>> MainPage::GetImageBuffer()
 {
 	ComPtr<IUnknown> buffer((IUnknown*) bitmap->PixelBuffer);
 	ComPtr<IBufferByteAccess> byteBuffer;
@@ -192,7 +193,14 @@ byte* MainPage::GetImageBuffer()
 	byte* bits;
 	byteBuffer->Buffer(&bits);
 
-	return bits;
+	shared_ptr<vector<byte*>> vectorBits = shared_ptr <vector<byte*>>(new vector<byte*>());
+
+	for (size_t i = 0; i < bitmap->PixelBuffer->Length; i++)
+	{
+		vectorBits->push_back(&bits[i]);
+	}
+
+	return vectorBits;
 }
 
 
@@ -205,28 +213,42 @@ void EncodingMessageApp::MainPage::Button_Click_1(Platform::Object^ sender, Wind
 	char* convertedText = bitEncoder->ConvertUTFToChar(text, length);
 
 
-	byte* image = this->GetImageBuffer();
+	shared_ptr<vector<byte*>> image = this->GetImageBuffer();
 	unsigned int pixelCount = bitmap->PixelWidth * bitmap->PixelHeight;
 	auto byteCount = pixelCount * 4; // bitsPerPixel * pixelCount / 8
 
-	byte* textLength = bitEncoder->BitConversion(length);
+	//byte* textLength = bitEncoder->BitConversion(length);
+	auto textLength = roEncoder->BitConversion(length);
 
-	for (size_t i = 0; i < length; i++)
+	//for (size_t i = 0; i < length; i++)
+	//{
+	//	char a = convertedText[i]; // wchar shows
+	//}
+
+	auto newVec = ref new Vector<uint32>();
+
+	for (auto i : *image)
 	{
-		char a = convertedText[i]; // wchar shows
+		newVec->Append((unsigned int) i);
 	}
 
-	auto t = sizeof(wchar_t); // 2 bytes
+	//// works
+	//byte* pointer = (byte*) newVec->GetAt(1);
+	//*pointer = 1;
 
-	bitEncoder->EncodeText(image, byteCount, textLength, 4, 0);
-	bitEncoder->EncodeText(image, byteCount, (byte*) convertedText, length, 32);
+	
+	roEncoder->EncodeText(newVec, textLength, 0);
+	/*bitEncoder->EncodeText(image, byteCount, textLength, 4, 0);
+	bitEncoder->EncodeText(image, byteCount, (byte*) convertedText, length, 32);*/
+
+
 
 	bitmap->Invalidate();
 }
 
 void EncodingMessageApp::MainPage::Button_Click_2(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
-	byte* image = this->GetImageBuffer();
+	byte* image = new byte[1, 3, 4, 3];// this->GetImageBuffer();
 
 	shared_ptr<unsigned int> decodedLength(new unsigned int(0));
 

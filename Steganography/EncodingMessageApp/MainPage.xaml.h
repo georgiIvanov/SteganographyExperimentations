@@ -29,7 +29,7 @@ namespace EncodingMessageApp
 		std::shared_ptr<EncodeInLowestBit> bitEncoder;
 		SteganographicEncoding::LowestBitEncoding^ roEncoder;
 
-		byte* GetImageBuffer();
+		shared_ptr<vector<byte*>> GetImageBuffer();
 		/*byte* DecodeText(byte* image, shared_ptr<unsigned int> decodedLength);
 		byte* EncodeText(byte* image, unsigned int imageLength, byte* added, unsigned int addedLength, int offset);
 		byte* BitConversion(int i);*/

@@ -26,7 +26,8 @@ uint32 LowestBitEncoding::GetEncodedTextLength(VectorUINT8^ image)
 
 VectorUINT8^ LowestBitEncoding::DecodeText(VectorUINT8^ image, uint32 textLength)
 {
-	Vector<uint8>^ decoded = ref new Vector<uint8>{32};
+	Vector<uint32>^ decoded = ref new Vector<uint32>{};
+	
 	int offset = 32;
 
 	for (int b = 0; b < textLength; b++)
@@ -63,3 +64,23 @@ VectorUINT8^ LowestBitEncoding::EncodeText(VectorUINT8^ image, VectorUINT8^ adde
 	return image;
 }
 
+VectorUINT8^ LowestBitEncoding::BitConversion(int i)
+{
+	byte byte3 = (byte) ((i & 0xFF000000) >> 24);
+	byte byte2 = (byte) ((i & 0x00FF0000) >> 16);
+	byte byte1 = (byte) ((i & 0x0000FF00) >> 8);
+	byte byte0 = (byte) ((i & 0x000000FF));
+
+	Vector<uint32>^ newVec = ref new Vector<uint32>(4);
+	newVec->Append(byte3);
+	newVec->Append(byte2);
+	newVec->Append(byte1);
+	newVec->Append(byte0);
+
+	return newVec;
+
+	/*return(new byte[]
+	{
+		byte3, byte2, byte1, byte0
+	});*/
+}
