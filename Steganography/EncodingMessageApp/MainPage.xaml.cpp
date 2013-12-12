@@ -45,26 +45,9 @@ MainPage::MainPage()
 	srand((unsigned) time(NULL));
 	bitmap = ref new WriteableBitmap(1, 1);
 	bitEncoder = shared_ptr<EncodeInLowestBit>();
-	//setlocale(LC_ALL, "");
-	TestClass^ test = ref new TestClass();
-	auto lol = ref new Platform::Collections::Vector<uint8, uint8>();
 
-	auto ff = test->DecodeText(lol, 32);
-
+	roEncoder = ref new LowestBitEncoding{};
 	
-	unique_ptr<wstring> str;
-	
-	String^ displayText = ref new String();
-	for (int i = 0; i < lol->Size; i ++)
-	{
-		
-		/*wchar_t ch = (wchar_t) lol->GetAt(i).ToString;
-		str->append(&ch);*/
-		displayText = displayText->Concat(displayText, lol->GetAt(i).ToString());
-	}
-
-	
-	_text->Text = displayText;
 }
 
 

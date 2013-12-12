@@ -27,6 +27,7 @@ namespace EncodingMessageApp
 	private:
 		Windows::UI::Xaml::Media::Imaging::WriteableBitmap^ bitmap;
 		std::shared_ptr<EncodeInLowestBit> bitEncoder;
+		SteganographicEncoding::LowestBitEncoding^ roEncoder;
 
 		byte* GetImageBuffer();
 		/*byte* DecodeText(byte* image, shared_ptr<unsigned int> decodedLength);

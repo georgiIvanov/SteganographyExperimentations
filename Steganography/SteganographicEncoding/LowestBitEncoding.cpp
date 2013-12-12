@@ -5,25 +5,61 @@
 using namespace SteganographicEncoding;
 using namespace Platform;
 using namespace Collections;
+//using namespace Platform::Collections;
 
 LowestBitEncoding::LowestBitEncoding()
 {
 }
 
-uint8* LowestBitEncoding::DecodeText(uint8* image, uint32 decodedLength)
+uint32 LowestBitEncoding::GetEncodedTextLength(VectorUINT8^ image)
 {
-	uint8 a(0);
-	return &a;
+	int length = 0;
+	int offset = 32;
+
+	for (int i = 0; i < 32; i++)
+	{
+		length = (length << 1) | (image->GetAt(i) & 1);
+	}
+
+	return length;
 }
 
-uint8* LowestBitEncoding::EncodeText(uint8* image, uint32 imageLength, uint8* added, uint32 addedLength, int32 offset)
+VectorUINT8^ LowestBitEncoding::DecodeText(VectorUINT8^ image, uint32 textLength)
 {
-	uint8 a(0);
-	return &a;
+	Vector<uint8>^ decoded = ref new Vector<uint8>{32};
+	int offset = 32;
+
+	for (int b = 0; b < textLength; b++)
+	{
+		for (int i = 0; i < 8; i++, ++offset)
+		{
+			int bit = (int) ((decoded->GetAt(b) << 1) | image->GetAt(offset) & 1);
+			decoded->InsertAt(b, bit);
+		}
+	}
+
+	return decoded;
 }
 
-void LowestBitEncoding::Blabla(uint8* lala)
+VectorUINT8^ LowestBitEncoding::EncodeText(VectorUINT8^ image, VectorUINT8^ added, int32 offset)
 {
-	Collections::Vector<uint8, uint8>^ lal = ref new Vector<uint8, uint8>();
+	if (added->Size + offset > image->Size)
+	{
+		throw ref new InvalidArgumentException(L"Image too small");
+	}
+
+	for (unsigned i = 0; i < added->Size; i++)
+	{
+		int add = added->GetAt(i);
+		for (int bit = 7; bit >= 0; --bit, ++offset)
+		{
+			int b = (add >> bit) & 1;
+
+			byte recordedByte = ((image->GetAt(offset) & 0xFE) | b);
+			image->SetAt(offset, recordedByte);
+		}
+	}
+
+	return image;
 }
 
