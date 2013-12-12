@@ -13,10 +13,16 @@ namespace Steganography
 	return &a;
 	}*/
 
-	char TestClass::GetMesssage()
+	/*char _declspec(dllexport)   DllClass::GetMesssage()
 	{
 		char lol = 1;
 
 		return lol;
-	}
+	}*/
+
+	
+}
+void Lol()
+{
+
 }

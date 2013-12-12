@@ -181,6 +181,9 @@
     <ProjectReference Include="..\SteganographicEncoding\SteganographicEncoding.vcxproj">
       <Project>{5b19c775-ffab-4c49-9d6f-7c5d0f774b9c}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Steganography\Steganography.vcxproj">
+      <Project>{7b98d2a2-d98f-4016-bc7f-58b7def5d517}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

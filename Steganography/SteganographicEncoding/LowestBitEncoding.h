@@ -1,26 +1,22 @@
 ﻿#pragma once
 
-#include <collection.h>
-
-//using namespace ;
-
 namespace SteganographicEncoding
 {
-	using VectorUINT8 = Windows::Foundation::Collections::IVector<uint32>;
-
 	public ref class LowestBitEncoding sealed
     {
-    public:
-		LowestBitEncoding();
+		Windows::UI::Xaml::Media::Imaging::WriteableBitmap^ bitmap;
 
-		VectorUINT8^ DecodeText(VectorUINT8^ image, uint32 textLength); //, uint32 decodedLength
-		VectorUINT8^ EncodeText(VectorUINT8^ image, VectorUINT8^ added, int32 offset); // uint32 imageLength, uint32 addedLength, 
-		uint32 GetEncodedTextLength(VectorUINT8^ image);
-		VectorUINT8^ BitConversion(int i);
-	
-	/*	byte* DecodeText(byte* image, std::shared_ptr<unsigned int> decodedLength);
+		byte* DecodeText(byte* image, std::shared_ptr<unsigned int> decodedLength);
 		byte* EncodeText(byte* image, unsigned int imageLength, byte* added, unsigned int addedLength, int offset);
 		byte* BitConversion(int i);
-		char* ConvertUTFToChar(const wchar_t* text, unsigned int length);*/
+		char* ConvertUTFToChar(const wchar_t* text, unsigned int length);
+		byte* GetImageBuffer();
+
+    public:
+		LowestBitEncoding::LowestBitEncoding();
+
+		void EncodeTextInImage(Platform::String^ inputText);
+		Platform::String^ DecodeTextInImage();
+		void SetBitmapStream(Windows::Storage::Streams::IRandomAccessStreamWithContentType^ stream);
     };
 }

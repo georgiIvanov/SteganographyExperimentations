@@ -9,11 +9,9 @@
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="LowestBitEncoding.cpp" />
-    <ClCompile Include="TestClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="LowestBitEncoding.h" />
-    <ClInclude Include="TestClass.h" />
   </ItemGroup>
 </Project>

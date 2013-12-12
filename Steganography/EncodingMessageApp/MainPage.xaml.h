@@ -25,14 +25,10 @@ namespace EncodingMessageApp
 		MainPage();
 
 	private:
-		Windows::UI::Xaml::Media::Imaging::WriteableBitmap^ bitmap;
+		Windows::UI::Xaml::Media::Imaging::BitmapImage^ bitmap;
 		std::shared_ptr<EncodeInLowestBit> bitEncoder;
 		SteganographicEncoding::LowestBitEncoding^ roEncoder;
 
-		shared_ptr<vector<byte*>> GetImageBuffer();
-		/*byte* DecodeText(byte* image, shared_ptr<unsigned int> decodedLength);
-		byte* EncodeText(byte* image, unsigned int imageLength, byte* added, unsigned int addedLength, int offset);
-		byte* BitConversion(int i);*/
 		void ChangeColors();
 		void Button_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void Button_Click_1(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
