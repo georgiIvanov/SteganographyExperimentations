@@ -1,16 +1,18 @@
 ﻿#pragma once
+#include <memory>
 
 namespace SteganographicEncoding
 {
+	using namespace std;
 	public ref class LowestBitEncoding sealed
     {
 		Windows::UI::Xaml::Media::Imaging::WriteableBitmap^ bitmap;
 
-		byte* DecodeText(byte* image, std::shared_ptr<unsigned int> decodedLength);
-		byte* EncodeText(byte* image, unsigned int imageLength, byte* added, unsigned int addedLength, int offset);
-		byte* BitConversion(int i);
+		shared_ptr<byte*> DecodeText(shared_ptr<byte*> image, shared_ptr<unsigned int> decodedLength);
+		shared_ptr<byte*> EncodeText(shared_ptr<byte*> image, unsigned int imageLength, shared_ptr<byte*> added, unsigned int addedLength, int offset);
+		shared_ptr<byte*> BitConversion(int i);
 		char* ConvertUTFToChar(const wchar_t* text, unsigned int length);
-		byte* GetImageBuffer();
+		shared_ptr<byte*> GetImageBuffer();
 
     public:
 		LowestBitEncoding::LowestBitEncoding();

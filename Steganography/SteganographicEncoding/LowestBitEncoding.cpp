@@ -17,14 +17,14 @@ LowestBitEncoding::LowestBitEncoding()
 	bitmap = ref new WriteableBitmap(1, 1);
 }
 
-byte* LowestBitEncoding::BitConversion(int i)
+shared_ptr<byte*> LowestBitEncoding::BitConversion(int i)
 {
 	byte byte3 = (byte) ((i & 0xFF000000) >> 24);
 	byte byte2 = (byte) ((i & 0x00FF0000) >> 16);
 	byte byte1 = (byte) ((i & 0x0000FF00) >> 8);
 	byte byte0 = (byte) ((i & 0x000000FF));
 
-	return(new byte[]
+	return make_shared<byte*>(new byte[]
 	{
 		byte3, byte2, byte1, byte0
 	});
@@ -34,7 +34,7 @@ char* LowestBitEncoding::ConvertUTFToChar(const wchar_t* text, unsigned int leng
 {
 	char* cString = new char[length + 1];
 	cString[length] = 0;
-	for (int y = 0; y < length; y++)
+	for (unsigned y = 0; y < length; y++)
 	{
 		char c = (char) text[y];
 		cString[y] = c;
@@ -43,7 +43,7 @@ char* LowestBitEncoding::ConvertUTFToChar(const wchar_t* text, unsigned int leng
 	return cString;
 }
 
-byte* LowestBitEncoding::EncodeText(byte* image, unsigned int imageLength, byte* added, unsigned int addedLength, int offset)
+shared_ptr<byte*> LowestBitEncoding::EncodeText(shared_ptr<byte*> image, unsigned int imageLength, shared_ptr<byte*> added, unsigned int addedLength, int offset)
 {
 	if (addedLength + offset > imageLength)
 	{
@@ -53,54 +53,55 @@ byte* LowestBitEncoding::EncodeText(byte* image, unsigned int imageLength, byte*
 
 	for (unsigned int i = 0; i < addedLength; ++i)
 	{
-		int add = added[i];
+		int add = (*added)[i];
 		for (int bit = 7; bit >= 0; --bit, ++offset)
 		{
 			int b = (add >> bit) & 1;
 
-			byte recordedByte = ((image[offset] & 0xFE) | b);
+			byte recordedByte = (((*image)[offset] & 0xFE) | b);
 
-			image[offset] = recordedByte;
+			(*image)[offset] = recordedByte;
 		}
 	}
 
 	return image;
 }
 
-byte* LowestBitEncoding::DecodeText(byte* image, shared_ptr<unsigned int> decodedLength)
+shared_ptr<byte*> LowestBitEncoding::DecodeText(shared_ptr<byte*> image, shared_ptr<unsigned int> decodedLength)
 {
 	int length = 0;
 	int offset = 32;
 
 	for (int i = 0; i < 32; i++)
 	{
-		length = (length << 1) | (image[i] & 1);
+		length = (length << 1) | ((*image)[i] & 1);
 	}
 
 	*decodedLength = length;
 
-	byte *result = new byte[length];
+	shared_ptr<byte*>result = make_shared<byte*>(new byte[length]);
 	for (int b = 0; b < length; ++b)
 	{
 		for (int i = 0; i < 8; ++i, ++offset)
 		{
-			int bit = (int) ((result[b] << 1) | image[offset] & 1);
-			result[b] = bit;
+			int bit = (int) (((*result)[b] << 1) | (*image)[offset] & 1);
+			(*result)[b] = bit;
 		}
 	}
 
 	return result;
 }
 
-byte* LowestBitEncoding::GetImageBuffer()
+shared_ptr<byte*> LowestBitEncoding::GetImageBuffer()
 {
 	
 	Microsoft::WRL::ComPtr<IUnknown> buffer((IUnknown*) bitmap->PixelBuffer);
 	Microsoft::WRL::ComPtr<IBufferByteAccess> byteBuffer;
 	buffer.As(&byteBuffer);
 
-	byte* bits;
-	byteBuffer->Buffer(&bits);
+	//byte* bits;
+	auto bits = make_shared<byte*>();
+	byteBuffer->Buffer(&(*bits));
 
 	return bits;
 }
@@ -115,39 +116,33 @@ void LowestBitEncoding::EncodeTextInImage(String^ inputText)
 	unsigned int length = inputText->Length();
 	const wchar_t* text = inputText->Data();
 
-	char* convertedText = this->ConvertUTFToChar(text, length);
+	shared_ptr<byte*> convertedText = make_shared<byte*>((byte*)this->ConvertUTFToChar(text, length));
 
 
-	byte* image = GetImageBuffer();
+	shared_ptr<byte*> image = GetImageBuffer();
 	unsigned int pixelCount = bitmap->PixelWidth * bitmap->PixelHeight;
 	auto byteCount = pixelCount * 4; // bitsPerPixel * pixelCount / 8
 
-	byte* textLength = this->BitConversion(length);
+	shared_ptr<byte*> textLength = this->BitConversion(length);
 
 	this->EncodeText(image, byteCount, textLength, 4, 0);
-	this->EncodeText(image, byteCount, (byte*) convertedText, length, 32);
+	this->EncodeText(image, byteCount, convertedText, length, 32);
 }
 
 String^ LowestBitEncoding::DecodeTextInImage()
 {
-	byte* image = this->GetImageBuffer();
+	shared_ptr<byte*> image = this->GetImageBuffer();
 
 	shared_ptr<unsigned int> decodedLength(new unsigned int(0));
 
-	byte* decodedText = this->DecodeText(image, decodedLength);
+	shared_ptr<byte*> decodedText = this->DecodeText(image, decodedLength);
 
 
 
-	for (size_t i = 0; i < *decodedLength; i++)
-	{
-		char a = (char) decodedText[i];
-		a = (char) decodedText[i];
-	}
-
-	int wchars_num = MultiByteToWideChar(CP_UTF8, 0, (char*) decodedText, -1, NULL, 0);
+	int wchars_num = MultiByteToWideChar(CP_UTF8, 0, (char*) (*decodedText), -1, NULL, 0);
 	wchar_t* wstr = new wchar_t[wchars_num];
 
-	MultiByteToWideChar(CP_UTF8, 0, (char*) decodedText, -1, wstr, wchars_num);
+	MultiByteToWideChar(CP_UTF8, 0, (char*) *decodedText, -1, wstr, wchars_num);
 
 	String^ str = ref new String(wstr, *decodedLength);
 	return str;
