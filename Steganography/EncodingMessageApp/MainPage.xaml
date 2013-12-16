@@ -15,12 +15,17 @@
                 <Button Click="Button_Click" HorizontalAlignment="Center">Open Image</Button>
                 <Button HorizontalAlignment="Center" Click="Button_Click_1">Add message</Button>
                 <Button HorizontalAlignment="Center" Click="Button_Click_2">Get message</Button>
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Margin="0, 30, 0, 0">
+                    <Button HorizontalAlignment="Center" Click="Button_Click_3">Open File'n'read</Button>
+                    <Button Click="Button_Click_4">Add message'n'save</Button>
+                    
+                </StackPanel>
             </StackPanel>
             <StackPanel VerticalAlignment="Center" Orientation="Vertical" Margin="5" >
                 <TextBox Height="300" Width="500" x:Name="_text" TextWrapping="Wrap"/>
                 <TextBox Height="300" Width="500" x:Name="_foundText" TextWrapping="Wrap"/>
             </StackPanel>
-
+            
         </StackPanel>
     </Grid>
 </Page>

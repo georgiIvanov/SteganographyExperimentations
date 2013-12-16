@@ -11,12 +11,14 @@
 #include <windows.h>
 #include <string>
 #include "EncodeInLowestBit.h"
-
+#include "FileHelper.h"
 
 using namespace SteganographicEncoding;
 using namespace EncodingMessageApp;
+using namespace RoClasses;
 
 using namespace Platform;
+using namespace Platform::Collections;
 using namespace Windows::Foundation;
 using namespace Windows::Foundation::Collections;
 using namespace Windows::UI::Xaml;
@@ -38,6 +40,7 @@ using namespace Windows::UI::Core;
 using namespace std;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
+FileInfo^ GetFile(StorageFolder^ folder);
 
 MainPage::MainPage()
 {
@@ -88,3 +91,99 @@ void EncodingMessageApp::MainPage::Button_Click_2(Platform::Object^ sender, Wind
 {
 	_foundText->Text = roEncoder->DecodeTextInImage();
 }
+
+void EncodingMessageApp::MainPage::Button_Click_3(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	StorageFolder^ localFolder = ApplicationData::Current->LocalFolder;
+	fileInfo = GetFile(localFolder);
+
+	auto openFileTask = create_task(localFolder->GetFileAsync(fileInfo->Name));
+	openFileTask.then([this](StorageFile^ file){
+
+		return create_task(file->OpenReadAsync());
+	}).then([this](IRandomAccessStreamWithContentType^ stream){
+		
+		bitmap->SetSource(stream->CloneStream());
+		roEncoder->SetBitmapStream(stream);
+		_modifiedImage->Source = bitmap;
+		_foundText->Text = roEncoder->DecodeTextInImage();
+	});
+
+}
+
+void EncodingMessageApp::MainPage::Button_Click_4(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	if (!fileInfo)
+	{
+		return;
+	}
+
+	if (_stream != nullptr)
+	{
+		_stream->CommitAsync();
+		for (size_t i = 0; i < 200000000; i++)
+		{
+
+		}
+		
+	}
+	StorageFolder^ localFolder = ApplicationData::Current->LocalFolder;
+
+	auto openFileTask = create_task(localFolder->GetFileAsync(fileInfo->Name));
+	openFileTask.then([this](StorageFile^ file){
+		
+		return create_task(file->OpenTransactedWriteAsync());
+	}).then([this](StorageStreamTransaction^ stream){
+		roEncoder->ClosePreviousStream();
+		roEncoder->SetBitmapStream(stream);
+		_stream = stream;
+		roEncoder->EncodeTextInStream(_text->Text);
+
+	});
+}
+
+
+FileInfo^ GetFile(StorageFolder^ folder)
+{
+	
+
+	String^ path(folder->Path + "\\*");
+	WIN32_FIND_DATA findData;
+	bool bContinue(true);
+	Vector<FileInfo^>^ vector = ref new Vector<FileInfo^>();
+
+	ZeroMemory(&findData, sizeof(findData));
+
+	HANDLE hSearchHandle = ::FindFirstFileExW(
+		path->Data(),
+		FINDEX_INFO_LEVELS::FindExInfoBasic,
+		&findData,
+		FINDEX_SEARCH_OPS::FindExSearchNameMatch,
+		nullptr,
+		0);
+
+	if (hSearchHandle == INVALID_HANDLE_VALUE)
+	{
+		DWORD dwError = ::GetLastError();
+		throw ref new COMException(dwError);
+	}
+	while (bContinue)
+	{
+		if (!(findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+		{
+			ULONG64 size = findData.nFileSizeHigh * ((ULONG64) MAXDWORD + 1);
+			size += findData.nFileSizeLow;
+
+			FileInfo^ fileInfo = ref new FileInfo(
+				ref new String(findData.cFileName),
+				size);
+
+			vector->Append(fileInfo);
+		}
+		bContinue = static_cast<bool>(::FindNextFile(hSearchHandle, &findData));
+	}
+
+
+	return vector->First()->Current;
+}
+

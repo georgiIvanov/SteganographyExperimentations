@@ -9,6 +9,7 @@
 #include <robuffer.h>
 #include <wrl.h>
 #include "EncodeInLowestBit.h"
+#include "FileHelper.h"
 
 
 //using namespace Windows::UI::Xaml::Media::Imaging;
@@ -28,10 +29,14 @@ namespace EncodingMessageApp
 		Windows::UI::Xaml::Media::Imaging::BitmapImage^ bitmap;
 		std::shared_ptr<EncodeInLowestBit> bitEncoder;
 		SteganographicEncoding::LowestBitEncoding^ roEncoder;
+		RoClasses::FileInfo^ fileInfo;
+		Windows::Storage::StorageStreamTransaction^ _stream;
 
 		void ChangeColors();
 		void Button_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void Button_Click_1(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 		void Button_Click_2(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void Button_Click_3(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void Button_Click_4(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
 	};
 }

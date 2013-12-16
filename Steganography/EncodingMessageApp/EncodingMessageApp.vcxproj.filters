@@ -20,6 +20,9 @@
     <Image Include="Assets\SplashScreen.scale-100.png">
       <Filter>Assets</Filter>
     </Image>
+    <Filter Include="RoClasses">
+      <UniqueIdentifier>{93b7770b-33ec-4958-a408-84b3ca1f51d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
@@ -29,12 +32,18 @@
     <ClCompile Include="MainPage.xaml.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="EncodeInLowestBit.cpp" />
+    <ClCompile Include="FileHelper.cpp">
+      <Filter>RoClasses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h" />
     <ClInclude Include="MainPage.xaml.h" />
     <ClInclude Include="EncodeInLowestBit.h" />
+    <ClInclude Include="FileHelper.h">
+      <Filter>RoClasses</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />

@@ -9,8 +9,10 @@ using namespace SteganographicEncoding;
 using namespace Platform;
 using namespace Collections;
 using namespace Windows::Storage::Streams;
+using namespace Windows::Storage;
 using namespace Windows::UI::Xaml::Media::Imaging;
 using namespace std;
+using namespace concurrency;
 
 LowestBitEncoding::LowestBitEncoding()
 {
@@ -78,6 +80,11 @@ shared_ptr<byte*> LowestBitEncoding::DecodeText(shared_ptr<byte*> image, shared_
 	}
 
 	*decodedLength = length;
+	if (length > MaxBytesInImage())
+	{
+		*decodedLength = 0;
+		return make_shared<byte*>(new byte[0]);
+	}
 
 	shared_ptr<byte*>result = make_shared<byte*>(new byte[length]);
 	for (int b = 0; b < length; ++b)
@@ -106,9 +113,28 @@ shared_ptr<byte*> LowestBitEncoding::GetImageBuffer()
 	return bits;
 }
 
+shared_ptr<byte*> LowestBitEncoding::GetStreamBuffer()
+{
+
+	Microsoft::WRL::ComPtr<IUnknown> buffer((IUnknown*) stream->Stream);
+	Microsoft::WRL::ComPtr<IBufferByteAccess> byteBuffer;
+	buffer.As(&byteBuffer);
+
+	//byte* bits;
+	auto bits = make_shared<byte*>();
+	byteBuffer->Buffer(&(*bits));
+
+	return bits;
+}
+
 void LowestBitEncoding::SetBitmapStream(IRandomAccessStreamWithContentType^ stream)
 {
 	bitmap->SetSource(stream);
+}
+
+void LowestBitEncoding::SetBitmapStream(StorageStreamTransaction^ stream)
+{
+	this->stream = stream;
 }
 
 void LowestBitEncoding::EncodeTextInImage(String^ inputText)
@@ -120,13 +146,41 @@ void LowestBitEncoding::EncodeTextInImage(String^ inputText)
 
 
 	shared_ptr<byte*> image = GetImageBuffer();
-	unsigned int pixelCount = bitmap->PixelWidth * bitmap->PixelHeight;
-	auto byteCount = pixelCount * 4; // bitsPerPixel * pixelCount / 8
+	auto byteCount = MaxBytesInImage();
 
 	shared_ptr<byte*> textLength = this->BitConversion(length);
 
 	this->EncodeText(image, byteCount, textLength, 4, 0);
 	this->EncodeText(image, byteCount, convertedText, length, 32);
+}
+
+void LowestBitEncoding::EncodeTextInStream(String^ inputText)
+{
+	unsigned int length = inputText->Length();
+	const wchar_t* text = inputText->Data();
+
+//	shared_ptr<byte*> convertedText = make_shared<byte*>((byte*)this->ConvertUTFToChar(text, length));
+
+	//DataWriter^ dataWriter = ref new DataWriter(stream->Stream);
+	
+
+	//dataWriter->WriteBytes()
+
+	DataReader^ reader = ref new DataReader(stream->Stream);
+	//WriteOnlyArray<byte, 1>^ arr = ref new Array<byte, 1>()
+	auto arr = ref new Array<uint8>(stream->Stream->Size);
+	auto readTask = create_task(reader->LoadAsync(stream->Stream->Size));
+	
+	readTask.then([this, &arr, &reader, length](unsigned int count)
+	{
+		reader->ReadBytes(arr);
+		shared_ptr<byte*> textLength = this->BitConversion(length);
+		/*this->EncodeText(image, byteCount, textLength, 4, 0);
+		this->EncodeText(image, byteCount, convertedText, length, 32);*/
+	});
+
+	
+
 }
 
 String^ LowestBitEncoding::DecodeTextInImage()
@@ -137,7 +191,11 @@ String^ LowestBitEncoding::DecodeTextInImage()
 
 	shared_ptr<byte*> decodedText = this->DecodeText(image, decodedLength);
 
-
+	if (*decodedLength == 0)
+	{
+		String^ str = ref new String();
+		return str;
+	}
 
 	int wchars_num = MultiByteToWideChar(CP_UTF8, 0, (char*) (*decodedText), -1, NULL, 0);
 	wchar_t* wstr = new wchar_t[wchars_num];
@@ -146,4 +204,17 @@ String^ LowestBitEncoding::DecodeTextInImage()
 
 	String^ str = ref new String(wstr, *decodedLength);
 	return str;
+}
+
+unsigned int LowestBitEncoding::MaxBytesInImage()
+{
+	unsigned int pixelCount = bitmap->PixelWidth * bitmap->PixelHeight;
+	auto byteCount = pixelCount * 4; // bitsPerPixel * pixelCount / 8
+	return byteCount;
+}
+
+void LowestBitEncoding::ClosePreviousStream()
+{
+	//stream->Close();
+	stream = nullptr;
 }
